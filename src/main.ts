@@ -1,18 +1,26 @@
+// 
 import 'bulma/css/bulma.css';
 import './app.css';
 import App from './App.svelte';
-import { darkMode } from './settings';
-import { mount } from 'svelte';
 
-const app = mount(App, {
-	target: document.getElementById('app')!,
-});
+// Solución robusta para el elemento contenedor
+const initApp = () => {
+  let appElement = document.getElementById('app');
+  
+  if (!appElement) {
+    appElement = document.createElement('div');
+    appElement.id = 'app';
+    document.body.appendChild(appElement);
+  }
 
-darkMode.subscribe(($darkMode) => {
-	const dark = 'theme-dark';
-	const light = 'theme-light';
-	document.documentElement.classList.add($darkMode ? dark : light);
-	document.documentElement.classList.remove($darkMode ? light : dark);
-});
+  new App({
+    target: appElement,
+  });
+};
 
-export default app;
+// Espera a que el DOM esté completamente cargado
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
