@@ -526,6 +526,9 @@ export class MarieSim {
 				this.addLog(action);
 			}
 			
+			if (typeof window !== 'undefined' && action && ['memwrite', 'memset'].includes(action.type)){
+                window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
+			}
 			// Sumar al contador global
 			if (typeof window !== 'undefined' && isRealMicroStep(action)) {
 				window.microStepCount = (window.microStepCount || 0) + 1;
