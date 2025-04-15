@@ -455,10 +455,10 @@ export class MarieSim {
 			this._log[this._log.length - 1].type !== 'step'
 		);
 
-		// Recalcular datos totales después de retroceder
-		if (typeof window !== 'undefined') {
-			window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
-		}
+		// // Recalcular datos totales después de retroceder
+		// if (typeof window !== 'undefined') {
+		// 	window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
+		// }
 
 		// Decrementar contador global de steps
 		if (typeof window !== 'undefined') {
@@ -529,9 +529,6 @@ export class MarieSim {
 				this.addLog(action);
 			}
 			
-			if (typeof window !== 'undefined' && action && ['memwrite', 'memset'].includes(action.type)){
-                window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
-			}
 			// Sumar al contador global
 			if (typeof window !== 'undefined' && isRealMicroStep(action)) {
 				window.microStepCount = (window.microStepCount || 0) + 1;
@@ -551,8 +548,11 @@ export class MarieSim {
 			const action = this._decoded.microSteps[pos](this);
 			if (action) {
 				this.addLog(action);
-				if (typeof window !== 'undefined' && ['memwrite', 'memset'].includes(action.type)) {
-					window.dataBytes = calculateDataBytesOccupied(window.dynamicDataAddresses);
+				if (typeof window !== 'undefined' && action && ['memwrite', 'memset'].includes(action.type)) {
+					window.dataBytes = calculateDataBytesOccupied(
+						window.staticDataAddresses,
+						window.dynamicDataAddresses
+					);
 				}
 			}
 			
@@ -643,10 +643,10 @@ export class MarieSim {
 			window.microStepCount = Math.max(0, window.microStepCount - 1);
 		}
 
-		// Recalcular datos totales después de retroceder
-		if (typeof window !== 'undefined') {
-			window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
-		}
+		// // Recalcular datos totales después de retroceder
+		// if (typeof window !== 'undefined') {
+		// 	window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
+		// }
 
 		return last;
 	}
@@ -701,8 +701,11 @@ export class MarieSim {
 				window.dynamicDataAddresses = new Set();
 			}
 			window.dynamicDataAddresses.add(this._registers.MAR);
-
-			window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
+		
+			window.dataBytes = calculateDataBytesOccupied(
+				window.staticDataAddresses,
+				window.dynamicDataAddresses
+			);
 		}
 
 		return {
@@ -1025,8 +1028,11 @@ export class MarieSim {
 					sim._halted = true;
 					// Recalcular datos totales al llegar a HALT
 					if (typeof window !== 'undefined') {
-						window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
-					}
+						window.dataBytes = calculateDataBytesOccupied(
+							window.staticDataAddresses,
+							window.dynamicDataAddresses
+						);
+					}					
 					return {
 						type: 'halt',
 						halt: true,
@@ -1435,17 +1441,14 @@ export function isRealMicroStep(action: Action | null): boolean {
 	return realTypes.includes(action.type);
 }
 
-export function calculateDataBytesOccupied(staticDataAddresses: Set<number>) {
-	const allData = new Set([...staticDataAddresses]);
+export function calculateDataBytesOccupied( staticDataAddresses: Set<number>, dynamicDataAddresses: Set<number>): number {
+    const allData = new Set([...staticDataAddresses]);
 
-	if(typeof window !== 'undefined' && window.dynamicDataAddresses !== undefined){
-		const dynamic = window.dynamicDataAddresses;
-		for (const addr of dynamic) {
-			allData.add(addr);
-		}
-	}
+    for (const addr of dynamicDataAddresses) {
+        allData.add(addr);
+    }
 
-	// Cada palabra ocupa 2 bytes
-	return allData.size * 2;
+    // Cada palabra ocupa 2 bytes
+    return allData.size * 2;
 }
 
