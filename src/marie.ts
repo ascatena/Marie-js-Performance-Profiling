@@ -343,6 +343,9 @@ export class MarieSim {
 				return Reflect.set(m, addr, newValue, r);
 			},
 		});
+		if (typeof window !== 'undefined' && window.dynamicDataAddresses === undefined) {
+			window.dynamicDataAddresses = new Set();
+		}
 	}
 
 	/**
@@ -548,9 +551,9 @@ export class MarieSim {
 			const action = this._decoded.microSteps[pos](this);
 			if (action) {
 				this.addLog(action);
-				// if (typeof window !== 'undefined' && ['memwrite', 'memset'].includes(action.type)) {
-				// 	window.dataBytes = calculateDataBytesOccupied(window.dynamicDataAddresses);
-				// }
+				if (typeof window !== 'undefined' && ['memwrite', 'memset'].includes(action.type)) {
+					window.dataBytes = calculateDataBytesOccupied(window.dynamicDataAddresses);
+				}
 			}
 			
 			// Sumar al contador global
@@ -1433,11 +1436,13 @@ export function isRealMicroStep(action: Action | null): boolean {
 }
 
 export function calculateDataBytesOccupied(staticDataAddresses: Set<number>) {
-	const dynamic = window.dynamicDataAddresses || new Set();
 	const allData = new Set([...staticDataAddresses]);
 
-	for (const addr of dynamic) {
-		allData.add(addr);
+	if(typeof window !== 'undefined' && window.dynamicDataAddresses !== undefined){
+		const dynamic = window.dynamicDataAddresses;
+		for (const addr of dynamic) {
+			allData.add(addr);
+		}
 	}
 
 	// Cada palabra ocupa 2 bytes
