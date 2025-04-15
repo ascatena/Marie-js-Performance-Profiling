@@ -455,10 +455,13 @@ export class MarieSim {
 			this._log[this._log.length - 1].type !== 'step'
 		);
 
-		// // Recalcular datos totales después de retroceder
-		// if (typeof window !== 'undefined') {
-		// 	window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
-		// }
+		// Recalcular datos totales después de retroceder
+		if (typeof window !== 'undefined') {
+			window.dataBytes = calculateDataBytesOccupied(
+				window.staticDataAddresses,
+				window.dynamicDataAddresses
+			);
+		}
 
 		// Decrementar contador global de steps
 		if (typeof window !== 'undefined') {
@@ -614,6 +617,16 @@ export class MarieSim {
 				break;
 			case 'memwrite':
 				this._memory[last.address] = last.oldContents;
+				// Eliminar la dirección de dynamicDataAddresses
+				if (typeof window !== 'undefined') {
+					window.dynamicDataAddresses.delete(last.address);
+	
+					// Recalcular dataBytes
+					window.dataBytes = calculateDataBytesOccupied(
+						window.staticDataAddresses,
+						window.dynamicDataAddresses
+					);
+				}
 				break;
 			case 'memset':
 				this._memory[last.address] = last.oldContents;
@@ -647,11 +660,6 @@ export class MarieSim {
 		if (typeof window !== 'undefined' && last.type === 'step-end') {
 			window.stepCount = Math.max(0, window.stepCount - 1);
 		}
-
-		// // Recalcular datos totales después de retroceder
-		// if (typeof window !== 'undefined') {
-		// 	window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
-		// }
 
 		return last;
 	}
