@@ -548,7 +548,7 @@ export class MarieSim {
 			const action = this._decoded.microSteps[pos](this);
 			if (action) {
 				this.addLog(action);
-				if (typeof window !== 'undefined' && action && ['memwrite', 'memset'].includes(action.type)) {
+				if (typeof window !== 'undefined' && ['memwrite', 'memset'].includes(action.type)) {
 					window.dataBytes = calculateDataBytesOccupied(
 						window.staticDataAddresses,
 						window.dynamicDataAddresses
@@ -1368,9 +1368,9 @@ export function assemble(code: string): AssemblyResult {
 		(instr) => instr.operator && MarieSim.instructionMap[instr.operator]
 	).length;
 
-	window.dataBytes = parsed.filter(
-		(instr) => ['dec', 'hex', 'oct'].includes(instr.operator)
-	  ).length * 2;
+	// window.dataBytes = parsed.filter(
+	// 	(instr) => ['dec', 'hex', 'oct'].includes(instr.operator)
+	//   ).length * 2;
 
 	if (errors.length > 0) {
 		return {
