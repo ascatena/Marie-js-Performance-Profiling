@@ -330,6 +330,7 @@
 
 		visibleMicroStepCount = window.microStepCount;
 		visibleStepCount = window.stepCount;
+		dataBytesOccupied = window.dataBytes;
 
 	}
 	$effect(() => rewind(log));
