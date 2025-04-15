@@ -642,6 +642,11 @@ export class MarieSim {
 		if (typeof window !== 'undefined' && isRealMicroStep(last)) {
 			window.microStepCount = Math.max(0, window.microStepCount - 1);
 		}
+		
+		// Decrementar contador global de steps si se deshizo un 'step-end'
+		if (typeof window !== 'undefined' && last.type === 'step-end') {
+			window.stepCount = Math.max(0, window.stepCount - 1);
+		}
 
 		// // Recalcular datos totales después de retroceder
 		// if (typeof window !== 'undefined') {
