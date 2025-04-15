@@ -463,11 +463,6 @@ export class MarieSim {
 			);
 		}
 
-		// Decrementar contador global de steps
-		if (typeof window !== 'undefined') {
-			window.stepCount = Math.max(0, window.stepCount - 1);
-		}
-
 		return this.microStepBack();
 	}
 	
