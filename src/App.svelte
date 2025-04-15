@@ -220,7 +220,7 @@
 			setStatus('Executed one step.');
 		}
 		visibleMicroStepCount = window.microStepCount;
-		//dataBytesOccupied = window.dataBytes;
+		dataBytesOccupied = window.dataBytes;
 	}
 
 	function onMicroStep(type?: string) {
@@ -230,7 +230,7 @@
 			setStatus('Executed one microstep.');
 		}
 		visibleMicroStepCount = window.microStepCount;
-		//dataBytesOccupied = window.dataBytes;
+		dataBytesOccupied = window.dataBytes;
 		visibleStepCount = window.stepCount;
 
 	}
