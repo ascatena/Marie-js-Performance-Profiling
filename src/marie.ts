@@ -452,6 +452,11 @@ export class MarieSim {
 			this._log[this._log.length - 1].type !== 'step'
 		);
 
+		// Recalcular datos totales después de retroceder
+		if (typeof window !== 'undefined') {
+			window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
+		}
+
 		// Decrementar contador global de steps
 		if (typeof window !== 'undefined') {
 			window.stepCount = Math.max(0, window.stepCount - 1);
@@ -630,6 +635,11 @@ export class MarieSim {
 		// Decrementar contador global de microsteps SOLO si era un microstep real
 		if (typeof window !== 'undefined' && isRealMicroStep(last)) {
 			window.microStepCount = Math.max(0, window.microStepCount - 1);
+		}
+
+		// Recalcular datos totales después de retroceder
+		if (typeof window !== 'undefined') {
+			window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
 		}
 
 		return last;
@@ -1007,6 +1017,10 @@ export class MarieSim {
 			microSteps: [
 				(sim) => {
 					sim._halted = true;
+					// Recalcular datos totales al llegar a HALT
+					if (typeof window !== 'undefined') {
+						window.dataBytes = calculateDataBytesOccupied(window.staticDataAddresses);
+					}
 					return {
 						type: 'halt',
 						halt: true,
