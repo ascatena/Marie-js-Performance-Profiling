@@ -881,7 +881,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td>Microsteps</td>
+									<td>Executed Microsteps</td>
 									<td>
 										<div class="input-box">
 											{visibleMicroStepCount}
@@ -901,7 +901,7 @@
 									<td><hr></td>
 								</tr>
 								<tr>
-									<td>Program</td>
+									<td>Program Segment</td>
 									<td><hr></td>
 									<td>
 										<div class="input-box">
@@ -915,7 +915,7 @@
 									</td>								
 								</tr>
 								<tr>
-									<td>Data</td>
+									<td>Data Segment</td>
 									<td><hr></td>
 									<td>
 										<div class="input-box">
