@@ -47,7 +47,7 @@ El simulador ahora identifica y diferencia el uso de la memoria principal ($4096
 * `/public/examples`: Ejemplos clásicos de MARIE para probar el rendimiento (Multiplicación, Quicksort, etc.).
 
 ---
-## 🛜Web Deployment
+## 🛜 Web Deployment
 La versión modificada de MARIE.js se encuentra accesible en el siguiente [link](https://marie-modified-for-performance-8slxt43u0.vercel.app/) (https://marie-modified-for-performance-8slxt43u0.vercel.app/).
 ## ⚙️ Instalación y Uso
 
